@@ -4,8 +4,19 @@
  * Created by xiyuyizhi on 16-12-20.
  */
 
-const arr = [1, 2, 3, 4]
+import WW from './code/code'
 
-arr.forEach((item) => {
-  console.log(item)
-})
+console.log(WW.$http({
+  url: 'api/users/',
+  success(data) {
+    console.log(data)
+  },
+  error(data, status, statusText) {
+    console.log(data)
+    console.log(status)
+    console.log(statusText)
+  },
+}))
+
+
+window.WW = WW

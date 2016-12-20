@@ -43,6 +43,7 @@ var config={
         configFile: '.eslintrc',
         fix:true
     },
+    devtool: 'eval-source-map',
     plugins:[
         new DashboardPlugin(),
         new webpack.BannerPlugin("author：xiyuyizhi \nCopyright xiyuyizhi."),
@@ -54,9 +55,13 @@ var config={
     ],
     devServer: {
         host:'0.0.0.0',
-        port: 3003,
+        port: 3001,
         proxy: {
-
+            '/api/*': {
+                target: 'http://localhost:3002/',
+                changeOrigin: true,
+                secure: false
+            }
         }
     }
 

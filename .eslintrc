@@ -30,7 +30,8 @@
     "no-console":0
   },
   "globals": {
-    "WW":true
+    "WW":true,
+    "ActiveXObject":true
   },
   "env": {
     "browser": true,

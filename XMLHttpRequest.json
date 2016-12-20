@@ -1,0 +1,29 @@
+{
+  "onabort":null,
+  "onerror":null,
+  "onload":null,
+  "onloadend":null,
+  "onloadstart":null,
+  "onprogress":null,
+  "onreadystatechange":null,
+  "ontimeout":null,
+  "readyState":0,
+  "response":"",
+  "responseText":"",
+  "responseType":"",
+  "responseURL":"",
+  "responseXML":null,
+  "status":0,
+  "statusText":"",
+  "timeout":0,
+  "upload":{
+    "onabort":null,
+    "onerror":null,
+    "onload":null,
+    "onloadend":null,
+    "onloadstart":null,
+    "onprogress":null,
+    "ontimeout":null
+  },
+  "withCredentials":false
+}
