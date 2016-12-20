@@ -68,7 +68,7 @@ export default function (conf) {
 
         }
       } else if (conf.error) {
-        errorFn(xhr)
+        errorFn(xhr, conf.error)
       } else {
           // promise方式
 

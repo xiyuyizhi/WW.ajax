@@ -13,5 +13,4 @@ export default {
   contentType: 'json', // json|text|multipart 后台要求接受的数据的类型 application/x-www-form-urlencoded application/json multipart/form-data
   success: null, //
   error: null, //
-
 }

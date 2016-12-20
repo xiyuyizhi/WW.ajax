@@ -3,6 +3,8 @@
  */
 
 import Http from './http'
+import merge from './util/mergeObject'
+import options from './var/option'
 
 /**
  *
@@ -13,9 +15,19 @@ function $http(config) {
   return new Http(config)
 }
 
-['get', 'post', 'put', 'delete', 'header'].forEach((item) => {
-  $http[item] = function () {
 
+['get', 'delete', 'header'].forEach((item) => {
+  $http[item] = function (...args) {
+    let opt = {
+      type: item,
+      url: args[0],
+      data: args[1],
+    }
+    opt = merge(options, opt)
+    if (args[2]) {
+      opt = merge(opt, args[2])
+    }
+    Http[item](opt)
   }
 })
 

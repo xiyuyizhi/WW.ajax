@@ -6,17 +6,22 @@
 
 import WW from './code/code'
 
-console.log(WW.$http({
-  url: 'api/users/',
-  success(data) {
-    console.log(data)
+// console.log(WW.$http({
+//   url: 'api/users/',
+//   success(data) {
+//     console.log(data)
+//   },
+//   error(data, status, statusText) {
+//     console.log(data)
+//     console.log(status)
+//     console.log(statusText)
+//   },
+// }))
+WW.$http.get('api/users', null, {
+  dataTye: 'text',
+  success(dat) {
+    console.log(dat)
   },
-  error(data, status, statusText) {
-    console.log(data)
-    console.log(status)
-    console.log(statusText)
-  },
-}))
-
+})
 
 window.WW = WW

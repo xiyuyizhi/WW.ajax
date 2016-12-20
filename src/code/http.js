@@ -15,6 +15,7 @@ class Http {
      * @param {object} config ajax配置参数
      */
   constructor(config) {
+    console.log('...........')
     this.config = merge(options, config)
     ajax(this.config)
   }
@@ -25,8 +26,8 @@ class Http {
      * @param {object} params url?后的参数
      * @param {object} conf 其他配置信息
      */
-  get(url, params, conf) {
-    console.log(conf)
+  static get(config) {
+    ajax(config)
   }
 
 }
