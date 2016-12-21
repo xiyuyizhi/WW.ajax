@@ -4,24 +4,22 @@
  * Created by xiyuyizhi on 16-12-20.
  */
 
-import WW from './code/code'
+import http from './code/transport'
 
-// console.log(WW.$http({
-//   url: 'api/users/',
-//   success(data) {
-//     console.log(data)
-//   },
-//   error(data, status, statusText) {
-//     console.log(data)
-//     console.log(status)
-//     console.log(statusText)
-//   },
-// }))
-WW.$http.get('api/users', null, {
-  dataTye: 'text',
-  success(dat) {
-    console.log(dat)
+http({
+  url: 'api/users/',
+  success(data) {
+    console.log(data)
   },
+  error(status, statusText) {
+    console.log(status)
+    console.log(statusText)
+  },
+}).then(function(data){
+  console.log('success')
+  console.log(data)
+},function(status){
+  console.log('error')
+  console.log(status)
 })
 
-window.WW = WW

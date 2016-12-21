@@ -12,17 +12,24 @@
         url:'',
         method:'',
         data:'',
-        dataType:'',
-        contentType:'',
+        header:{
+            dataType:'',
+            contentType:'',
+            withCredentials:false
+        },
         success:'',
         error:''
     })
+    
+    get delete header 三个参数
+    post put 三个或四个参数
     WW.http.get({
       url:'',
-      dataType:'',
-      contentType:'',
-      success:'',
-      error:''
+      params:'',
+      header:{
+         dataType:'',
+         contentType:''
+      }
     })
     
     get post delete put header
@@ -31,10 +38,20 @@
             url:'',
             method:'',
             data:'',
-            dataType:'',
-            contentType:''
+            header:{
+                   dataType:'',
+                   contentType:'',
+                   withCredentials:false
+            }
         }).then().then()
-    WW.http.get().success().error()   
+    WW.http.get({
+         url:'',
+         params:'',
+         header:{
+               dataType:'',
+               contentType:''
+         }
+    }).success().error()   
     
     对请求能够修改header
     对相应能够获取header

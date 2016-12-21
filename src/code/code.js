@@ -2,7 +2,7 @@
  * Created by xiyuyizhi on 16-12-20.
  */
 
-import Http from './http'
+import Http from './transport'
 import merge from './util/mergeObject'
 import options from './var/option'
 
@@ -24,7 +24,7 @@ function $http(config) {
       data: args[1],
     }
     opt = merge(options, opt)
-    if (args[2]) {
+    if (args[2] && {}.prototype.toString.call(args[2]) == '[object Object]') {
       opt = merge(opt, args[2])
     }
     Http[item](opt)
