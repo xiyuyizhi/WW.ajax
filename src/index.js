@@ -4,17 +4,14 @@
  * Created by xiyuyizhi on 16-12-20.
  */
 
-import http from './code/transport'
+import WW from './code/WW'
 
-http({
-  url: 'api/users/',
-  success(data) {
-    console.log(data)
-  },
-  error(status, statusText) {
-    console.log(status)
-    console.log(statusText)
-  },
+
+WW.http({
+  url: 'api/users/:userId',
+  params:{
+    userId:1
+  }
 }).then(function(data){
   console.log('success')
   console.log(data)
@@ -22,4 +19,20 @@ http({
   console.log('error')
   console.log(status)
 })
+
+WW.http({
+  url:'api/users',
+  type:'post',
+  params:{
+    condition:'haha'
+  },
+  data:{
+    username:'ww',
+    age:22
+  }
+}).then(function(data){
+  console.log('post success')
+  console.log(data)
+})
+
 

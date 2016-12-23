@@ -3,9 +3,11 @@
  */
 
 import Promise from "promise"
-import createXhr from './createXhr'
 import options from "./var/option"
+import createXhr from './createXhr'
 import merge from "./util/mergeObject"
+import paramsParser from "./util/params"
+import clone from "./util/clone"
 
 function adapterResponse(dataType, xhr) {
     let data;
@@ -47,25 +49,44 @@ function resolveFn(data,xhr,successFn,resolve){
     }
 }
 
+
 /**
  * @param {object} conf options
  */
-export default function (conf) {
-    conf=merge(options,conf)
-    console.log(conf)
-    const xhr = createXhr(conf)
+export default class Transport{
 
-    return new Promise(function (resolve, reject) {
-        xhr.onreadystatechange = function(){
-            if (xhr.readyState === 4) {
-                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
-                    // promise方式
-                    const data = adapterResponse(conf.headers.dataType, xhr);
-                    resolveFn(data,xhr,conf.success,resolve)
-                    return
+    constructor(conf){
+        this.init(conf)
+    }
+
+    init(conf){
+        const confCopy=merge(clone(options),clone(conf))
+        /**
+         * 处理传递的参数
+         */
+        paramsParser(confCopy)
+        const xhr = createXhr(confCopy)
+        this.conf=confCopy
+        this.xhr=xhr
+    }
+
+    getPromise(){
+        const xhr=this.xhr
+        const confCopy=this.conf
+        return new Promise(function (resolve, reject) {
+            xhr.onreadystatechange = function(){
+                if (xhr.readyState === 4) {
+                    if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                        // promise方式
+                        const data = adapterResponse(confCopy.headers.dataType, xhr);
+                        resolveFn(data,xhr,confCopy.success,resolve)
+                        return
+                    }
+                    rejectFn(xhr,confCopy.error,reject)
                 }
-                rejectFn(xhr,conf.error,reject)
             }
-        }
-    })
+        })
+    }
+
 }
+

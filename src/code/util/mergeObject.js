@@ -8,22 +8,20 @@
  * @param {object} obj 要合并的对象
  * @return {object} 合并后的对象
  */
-
-const toString={}.toString
 const hasOwnProp={}.hasOwnProperty
 
-function merge(toMerge, obj) {
-  for (const key in obj) {
-    if (hasOwnProp.call(obj, key)) {
-      if(toString.call(obj[key])=='[object Object]'){
-        merge(toMerge[key],obj[key])
+function merge(option, toMerge) {
+  for (const key in toMerge) {
+    if (hasOwnProp.call(toMerge, key)) {
+      if(key==='headers'){
+        merge(option[key],toMerge[key])
       }else{
-        toMerge[key] = obj[key]
+        option[key] = toMerge[key]
       }
 
     }
   }
-  return toMerge
+  return option
 }
 
 export default merge
