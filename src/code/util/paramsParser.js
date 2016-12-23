@@ -23,7 +23,4 @@ export default function(config){
         }
         return;
     }
-
-    throw new Error('params必须为对象')
-
 }
