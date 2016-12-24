@@ -33,12 +33,12 @@ function HttpFn(config) {
 
 HttpFn.pendingRequests=[]
 
-
 HttpFn.interceptor={
     request:null,
     response:null,
     responseError:null
 }
+
 HttpFn.Interceptor=function(fn){
     merge(HttpFn.interceptor,fn())
 }

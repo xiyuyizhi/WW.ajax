@@ -38,15 +38,12 @@ const loading=document.querySelector('.loading')
 WW.http.Interceptor(function(){
     return {
         request:function(config){
-            //console.log('................')
             config.headers.token="tokennnn"
             loading.className+=" show"
             console.log(WW.http.pendingRequests)
             return config
         },
         response:function(data){
-            console.log('...........')
-            console.log(data)
             if(!WW.http.pendingRequests.length){
                 loading.className='loading'
             }
@@ -54,11 +51,8 @@ WW.http.Interceptor(function(){
             return data
         },
         responseError:function(err){
-            loading.innerHTML=err.statusText
-            setTimeout(function(){
-                loading.className='loading'
-            },2000)
             console.log(err)
+            console.log(WW.http.pendingRequests)
         }
     }
 })
@@ -68,9 +62,6 @@ WW.http.get('api/users/:userId',{
 }).then(function(data){
   console.log('success')
   console.log(data)
-},function(status){
-  console.log('error')
-  console.log(status)
 })
 
 
@@ -82,10 +73,11 @@ WW.http.post('api/users',null,
     },
     {
         headers:{
-            //contentType:'text'
+            contentType:'text'
         }
     }
 ).then(function (data) {
     console.log('post success')
     console.log(data)
+    console.log(data.headers('content-type'))
 })

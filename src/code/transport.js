@@ -42,10 +42,15 @@ function resolveFn(data,xhr,successFn,resolve){
     resolve({
         data:data,
         status:xhr.status,
-        statusText:xhr.statusText
+        statusText:xhr.statusText,
+        headers:function(key){
+            return xhr.getResponseHeader(key)
+        }
     })
     if(successFn){
-        successFn(data,xhr.status,xhr.statusText)
+        successFn(data,xhr.status,xhr.statusText,function(key){
+            return xhr.getResponseHeader(key)
+        })
     }
 }
 
@@ -81,6 +86,7 @@ export default class Transport{
         const pendingRequests=this.pendingRequests
         return new Promise(function (resolve, reject) {
             xhr.onreadystatechange = function(){
+                //console.log(xhr)
                 if (xhr.readyState === 4) {
                     pendingRequests.splice(pendingRequests.indexOf(confCopy),1)
                     //success
