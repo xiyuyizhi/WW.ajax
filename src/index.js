@@ -33,13 +33,32 @@ import WW from './code/WW'
 //   console.log(data)
 // })
 
+const loading=document.querySelector('.loading')
 
 WW.http.Interceptor(function(){
     return {
         request:function(config){
-            console.log('................')
+            //console.log('................')
             config.headers.token="tokennnn"
-            console.log(config)
+            loading.className+=" show"
+            console.log(WW.http.pendingRequests)
+            return config
+        },
+        response:function(data){
+            console.log('...........')
+            console.log(data)
+            if(!WW.http.pendingRequests.length){
+                loading.className='loading'
+            }
+
+            return data
+        },
+        responseError:function(err){
+            loading.innerHTML=err.statusText
+            setTimeout(function(){
+                loading.className='loading'
+            },2000)
+            console.log(err)
         }
     }
 })

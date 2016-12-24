@@ -55,36 +55,46 @@ function resolveFn(data,xhr,successFn,resolve){
  */
 export default class Transport{
 
-    constructor(conf,interceptor){
+    constructor(conf,interceptor,pendingRequests){
         this.interceptor=interceptor
+        this.pendingRequests=pendingRequests
         this.init(conf)
     }
 
     init(conf){
-        const confCopy=merge(clone(options),clone(conf))
+        conf=merge(clone(options),clone(conf))
         /**
          * 处理传递的参数
          */
-        paramsParser(confCopy)
-        this.interceptor.request && this.interceptor.request(confCopy)
-        const xhr = createXhr(confCopy)
-        this.conf=confCopy
+        paramsParser(conf)
+        this.interceptor.request && (conf=this.interceptor.request(conf))
+        this.pendingRequests.push(conf)
+        const xhr = createXhr(conf)
+        this.conf=conf
         this.xhr=xhr
     }
 
     getPromise(){
         const xhr=this.xhr
         const confCopy=this.conf
+        const interceptor=this.interceptor
+        const pendingRequests=this.pendingRequests
         return new Promise(function (resolve, reject) {
             xhr.onreadystatechange = function(){
                 if (xhr.readyState === 4) {
-                    //console.log(xhr.getAllResponseHeaders())
+                    pendingRequests.splice(pendingRequests.indexOf(confCopy),1)
+                    //success
                     if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
-                        // promise方式
                         const data = adapterResponse(confCopy.headers.dataType, xhr);
+                        interceptor.response && interceptor.response(data)
                         resolveFn(data,xhr,confCopy.success,resolve)
                         return
                     }
+                    //error
+                    interceptor.responseError && interceptor.responseError({
+                        status:xhr.status,
+                        statusText:xhr.statusText
+                    })
                     rejectFn(xhr,confCopy.error,reject)
                 }
             }

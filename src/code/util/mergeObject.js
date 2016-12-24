@@ -14,7 +14,7 @@ function merge(option, toMerge) {
   for (const key in toMerge) {
     if (hasOwnProp.call(toMerge, key)) {
       if(key==='headers'){
-        merge(option[key],toMerge[key])
+        option[key]=merge(option[key],toMerge[key])
       }else{
         option[key] = toMerge[key]
       }

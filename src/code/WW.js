@@ -8,7 +8,7 @@ import merge from "./util/mergeObject"
 
 function HttpFn(config) {
     //HttpFn.start()
-    const transport = new Transport(config,HttpFn.interceptor)
+    const transport = new Transport(config,HttpFn.interceptor,HttpFn.pendingRequests)
     return transport.getPromise()
 }
 
@@ -27,27 +27,13 @@ function HttpFn(config) {
             conf.params = args[1]
             conf.headers = args[2] && args[2].headers
         }
-        return new Transport(conf,HttpFn.interceptor).getPromise()
+        return new Transport(conf,HttpFn.interceptor,HttpFn.pendingRequests).getPromise()
     }
 })
 
 HttpFn.pendingRequests=[]
 
-/**
- * 全局开始处理
- * @param fn
- */
-HttpFn.start=function(fn){
-    fn && fn();
-}
 
-HttpFn.complete=function(){
-
-}
-
-HttpFn.InterceptorFactory=function(){
-    return HttpFn.Interceptor()
-}
 HttpFn.interceptor={
     request:null,
     response:null,
