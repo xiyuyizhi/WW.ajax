@@ -1,0 +1,118 @@
+@import "./mixin.less";
+
+.gradientHead, .gradientProcess {
+  .gradient(#1EAC5A, #0A7939)
+}
+
+/*弹出框*/
+
+#uploadProcess {
+  width: 600px;
+  height: 0px;
+  background: white;
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  border: 1px solid #666;
+  .box-shadow(0px 0px 5px 2px #eee);
+  .transition(height 1s);
+  display: none;
+  z-index: 9999;
+  .head {
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+    line-height: 50px;
+    text-indent: 15px;
+    font-size: 1.2em;
+    color: white;
+    font-weight: bold;
+  }
+  .menu {
+    float: right;
+    margin-right: 10px;
+    span {
+      float: left;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .minimize,
+    .maximize {
+      width: 10px;
+      height: 50px;
+      background: url(../image/menu_ico.png) no-repeat;
+    }
+    .minimize {
+      background-position: 0px 23px;
+      display: block;
+    }
+    .maximize {
+      background-position: 0px -30px;
+      display: none;
+    }
+  }
+  /**进度条*/
+  .processUl {
+    width: 100%;
+    height: 350px;
+    list-style: none;
+    margin: 0px;
+    padding: 0;
+    li {
+      height: 40px;
+      width: 100%;
+      line-height: 40px;
+      color: #666;
+      font-size: 0.9em;
+      border-top: 1px solid #eee;
+      position: relative;
+      z-index: 1;
+      &.lastLi {
+        border-bottom: 1px solid #eee;
+      }
+      .processDiv {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        z-index: -1;
+        .opacity(0.6);
+        .transition(width 1s);
+      }
+      span {
+        height: 100%;
+        padding: 0px 20px;
+        overflow: hidden;
+        display: block;
+        float: left;
+        &.title {
+          width: 250px;
+          height: 100%;
+        }
+        &.size {
+          width: 100px;
+          text-align: left;
+        }
+        &.percent {
+          visibility: hidden;
+        }
+        &.status {
+          width: 15px;
+          display: inline-block;
+          padding: 0px;
+          margin-left: 10px;
+        }
+        &.ok {
+          background: url(../image/status_ico.png) no-repeat 0 center;
+        }
+        &.cancel {
+          background: url(../image/status_ico.png) no-repeat  -30px center;
+          &:hover{
+            background-position: -60px center;
+          }
+        }
+      }
+    }
+  }
+}

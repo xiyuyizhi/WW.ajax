@@ -69,9 +69,5 @@ HttpFn.Interceptor = function (fn) {
   merge(HttpFn.interceptor, fn())
 }
 
-const WW = {
-  http: HttpFn,
-}
 
-
-export default WW
+export default HttpFn
