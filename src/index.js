@@ -4,6 +4,27 @@
 
 import WW from './code/WW'
 
+const loading = document.querySelector('.loading')
+
+WW.http.Interceptor(() => ({
+  request(config) {
+    config.headers.token = 'tokennnn'
+    loading.className += ' show'
+    console.log(WW.http.pendingRequests)
+    return config
+  },
+  response(data) {
+    if (!WW.http.pendingRequests.length) {
+      loading.className = 'loading'
+    }
+    return data
+  },
+  responseError(err) {
+    console.log(err)
+    loading.className = 'loading'
+    console.log(WW.http.pendingRequests)
+  },
+}))
 
 // WW.http({
 //   url: 'api/users/:userId',
@@ -18,66 +39,37 @@ import WW from './code/WW'
 //   console.log(status)
 // })
 //
-// WW.http({
-//   url:'api/users',
-//   type:'post',
-//   params:{
-//     condition:'haha'
-//   },
-//   data:{
-//     username:'ww',
-//     age:22
-//   }
-// }).then(function(data){
-//   console.log('post success')
-//   console.log(data)
-// })
-
-const loading=document.querySelector('.loading')
-
-WW.http.Interceptor(function(){
-    return {
-        request:function(config){
-            config.headers.token="tokennnn"
-            loading.className+=" show"
-            console.log(WW.http.pendingRequests)
-            return config
-        },
-        response:function(data){
-            if(!WW.http.pendingRequests.length){
-                loading.className='loading'
-            }
-
-            return data
-        },
-        responseError:function(err){
-            console.log(err)
-            console.log(WW.http.pendingRequests)
-        }
-    }
+WW.http({
+  url: 'api/users',
+  type: 'post',
+  params: {
+    condition: 'haha',
+  },
+  data: {
+    username: 'ww',
+    age: 22,
+  },
+}).then((data) => {
+  console.log('post success')
+  console.log(data)
 })
 
-WW.http.get('api/users/:userId',{
-  userId:1
-}).then(function(data){
+
+WW.http.get('api/users/:userId', {
+  userId: 1,
+}).then((data) => {
   console.log('success')
   console.log(data)
 })
 
 
-
-WW.http.post('api/users',null,
-    {
-        username: 'ww',
-        age: 22
-    },
-    {
-        headers:{
-            contentType:'text'
-        }
-    }
-).then(function (data) {
-    console.log('post success')
-    console.log(data)
-    console.log(data.headers('content-type'))
+WW.http.post('api/users',
+  {
+    username: 'ww',
+    age: 22,
+  },
+).then((data) => {
+  console.log('post success')
+  console.log(data)
+  console.log(data.headers('content-type'))
 })

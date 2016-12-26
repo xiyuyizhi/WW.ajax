@@ -3,48 +3,74 @@
  */
 
 
-import Transport from "./transport"
-import merge from "./util/mergeObject"
+import Transport from './transport'
+import merge from './util/mergeObject'
+import valid from './util/valid'
 
+/**
+ *
+ * @param {object} config ajax配置项
+ * @return {*} promise对象
+ * @constructor
+ */
 function HttpFn(config) {
-    //HttpFn.start()
-    const transport = new Transport(config,HttpFn.interceptor,HttpFn.pendingRequests)
-    return transport.getPromise()
+    // HttpFn.start()
+  const key = valid(config)
+  if (key) {
+    throw new Error(`property ${key} not allowed`)
+  }
+  const transport = new Transport(config, HttpFn.interceptor, HttpFn.pendingRequests)
+  return transport.getPromise()
 }
 
-['get', 'post', 'put', 'delete', 'header'].forEach(action => {
-    action = action.toLowerCase()
-    HttpFn[action] = function (...args) {
-        const conf = {
-            type: action,
-            url: args[0]
-        }
-        if (action == 'post' || action == 'put') {
-            conf.params = args[1]
-            conf.data = args[2]
-            conf.headers = args[3] && args[3].headers
-        } else {
-            conf.params = args[1]
-            conf.headers = args[2] && args[2].headers
-        }
-        return new Transport(conf,HttpFn.interceptor,HttpFn.pendingRequests).getPromise()
+['get', 'post', 'put', 'delete', 'header'].forEach((action) => {
+  action = action.toLowerCase()
+  HttpFn[action] = function (...args) {
+    const conf = {
+      type: action,
+      url: args[0],
     }
+    const argsLen = args.length
+    if (action == 'post' || action == 'put') {
+            // 最多四个参数 url params data option
+      if (argsLen == 2) {
+        conf.data = args[1]
+      }
+      if (argsLen == 3) {
+        if (args[2].headers) {
+          conf.data = args[1]
+          conf.headers = args[2].headers
+        } else {
+          conf.params = args[1]
+          conf.data = args[2]
+        }
+      } else {
+        conf.params = args[1]
+        conf.data = args[2]
+        conf.headers = args[3] && args[3].headers
+      }
+    } else {
+      conf.params = args[1]
+      conf.headers = args[2] && args[2].headers
+    }
+    return new Transport(conf, HttpFn.interceptor, HttpFn.pendingRequests).getPromise()
+  }
 })
 
-HttpFn.pendingRequests=[]
+HttpFn.pendingRequests = []
 
-HttpFn.interceptor={
-    request:null,
-    response:null,
-    responseError:null
+HttpFn.interceptor = {
+  request: null,
+  response: null,
+  responseError: null,
 }
 
-HttpFn.Interceptor=function(fn){
-    merge(HttpFn.interceptor,fn())
+HttpFn.Interceptor = function (fn) {
+  merge(HttpFn.interceptor, fn())
 }
 
 const WW = {
-    http: HttpFn
+  http: HttpFn,
 }
 
 

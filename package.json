@@ -7,7 +7,8 @@
     "dev:board": "webpack-dashboard -- webpack-dev-server  --config ./webpack.config.js",
     "dev": "webpack-dev-server --inline --hot --profile  --watch --colors --progress --display-error-details",
     "build": "rm -rf dist && webpack -p --progress  --config ./webpack.config.js",
-    "test": "npm run test"
+    "test": "npm run test",
+    "lint":"eslint --fix src/ --ext js"
   },
   "repository": {
     "type": "git",
