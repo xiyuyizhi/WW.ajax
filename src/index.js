@@ -11,25 +11,25 @@ const WW = {
 
 const loading = document.querySelector('.loading')
 
-// WW.http.Interceptor(() => ({
-//   request(config) {
-//     config.headers.token = 'tokennnn'
-//     loading.className += ' show'
-//     console.log(WW.http.pendingRequests)
-//     return config
-//   },
-//   response(data) {
-//     if (!WW.http.pendingRequests.length) {
-//       loading.className = 'loading'
-//     }
-//     return data
-//   },
-//   responseError(err) {
-//     console.log(err)
-//     loading.className = 'loading'
-//     console.log(WW.http.pendingRequests)
-//   },
-// }))
+WW.http.Interceptor(() => ({
+  request(config) {
+    config.headers.token = 'tokennnn'
+    loading.className += ' show'
+    console.log(WW.http.pendingRequests)
+    return config
+  },
+  response(data) {
+    if (!WW.http.pendingRequests.length) {
+      loading.className = 'loading'
+    }
+    return data
+  },
+  responseError(err) {
+    console.log(err)
+    loading.className = 'loading'
+    console.log(WW.http.pendingRequests)
+  },
+}))
 
 // WW.http({
 //   url: 'api/users/:userId',

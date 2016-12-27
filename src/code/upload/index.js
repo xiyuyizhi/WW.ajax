@@ -15,15 +15,19 @@ import "./css/upload.less"
 
 function upload(dom,conf){
 
+    const count={
+        fileLen:0
+    };
+
     [].slice.call(dom)
 
     conf=merge(defaultOption,conf)
 
-    const filenames=conf.fileName
+    const fileNames=conf.fileName
     const multiple=conf.multiple
 
     eventHandler.on(dom,'click',function(e){
-        const ele=createEle(filenames,multiple) //input file
+        const ele=createEle(fileNames,multiple) //input file
         e.target.appendChild(ele)
         eventHandler.on(ele,'click',function(e){
             e.stopPropagation()
@@ -32,10 +36,9 @@ function upload(dom,conf){
         /**
          * 上传进度 类型
          */
-
         switch(conf.showType){
             case 'process':
-                initProcessHtml()
+                initProcessHtml(count)
                 break;
             case  'loading':
                 break;
@@ -64,41 +67,58 @@ function upload(dom,conf){
     }
 
     function fileChangeHandler(fileList,config){
-
-        processBar(fileList,config.allowSuffix)
-
         const $uploadProcess=document.querySelector('#uploadProcess')
-        const $li=document.querySelectorAll('.processUl li')
-        const width=css($li[0],'width');
-        css($uploadProcess,'display','block')
-        console.log($uploadProcess)
-        $uploadProcess.querySelector('.minimize').click();
-        [].slice.call(fileList).forEach( (file,index) => {
+        /**
+         * 生成进度条
+         */
+        processBar(fileList,config.allowSuffix)
+        $uploadProcess.querySelector('.headMsg').innerHTML='上传中'
+        $uploadProcess.querySelector('.maximize').click();
+        const promiseArr=[];
 
-            const con={
-                url:config.url,
-                type:'post',
-                data:file,
-                headers:{
-                    contentType:'multipart'
-                },
-                success:config.success,
-                error:config.error,
-                uploadProcess:function(e){
-                    console.log(e)
-                    const currentPercent = e.position / e.totalSize;
-                    const $processDiv=$li[index].querySelector(".processDiv");
-                    const $percentSpan=$li[index].querySelector('.percent')
-                    css($percentSpan,'visibility','visible');
-                    $percentSpan.innerHTML=(currentPercent * 100).toFixed(2) + "%"
-                    css($processDiv,'width',currentPercent * parseInt(width) + "px");
+        (function(originFilesLength){
+            [].slice.call(fileList).forEach( (file,index) => {
+                const con={
+                    url:config.url,
+                    type:'post',
+                    data:file,
+                    headers:{
+                        contentType:'multipart',
+                        dataType:'text'
+                    },
+                    success:config.success,
+                    error:config.error,
+                    uploadProcess:function(e){
+                        console.log(count.fileLen)
+                        const $li=document.querySelectorAll('.processUl li')[originFilesLength+index]
+                        const currentPercent = e.loaded / e.total;
+                        const $processDiv=$li.querySelector(".processDiv");
+                        const $percentSpan=$li.querySelector('.percent')
+                        const width=css.width($li);
+                        css($percentSpan,'visibility','visible');
+                        $percentSpan.innerHTML=(currentPercent * 100).toFixed(2) + "%"
+                        css($processDiv,'width',currentPercent * parseInt(width) + "px");
+                        if(currentPercent>=1){
+                            //完成
+                            const $cancel=$li.querySelector('.cancel')
+                            css($processDiv,'display','none')
+                            css($percentSpan,'visibility','hidden');
+                            $cancel.className='status ok'
+                        }
+                    }
                 }
-            }
-
-            HttpFN(con).then(function(){
-
+                promiseArr.push(HttpFN(con))
             })
+        })(count.fileLen)
 
+        count.fileLen+=fileList.length
+
+        Promise.all(promiseArr).then(function(){
+            //全部完成
+            $uploadProcess.querySelector('.headMsg').innerHTML='上传完成'
+            setTimeout(function(){
+                $uploadProcess.querySelector('.minimize').click();
+            },500);
         })
 
     }

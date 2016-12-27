@@ -11,17 +11,13 @@ import headers from './var/headers'
  */
 function headerSet(confHeaders, xhr) {
   const keys = Object.keys(confHeaders)
-  console.log(confHeaders)
   for (const key of keys) {
     if (headers[key]) {
-      console.log(confHeaders[key])
-      if(confHeaders[key]!=='none'){
+      if(confHeaders[key]!=='multipart'){ //附件上传不需要指定content-type:multipart/form-data
         const k = headers[key].name
         const v = headers[key][confHeaders[key]]
-        console.log(v)
         xhr.setRequestHeader(k, v)
       }
-
     } else {
       xhr.setRequestHeader(key, confHeaders[key])
     }
@@ -49,15 +45,15 @@ export default function (conf) {
     const up = xhr.upload
     if (up) {
       if (up.addEventListener) {
-        up.addEventListener('process', (e) => {
+        up.addEventListener('progress', (e) => {
           conf.uploadProcess(e)
         })
       } else if (up.attachEvent) {
-        up.attachEvent('process', (e) => {
+        up.attachEvent('progress', (e) => {
           conf.uploadProcess(e)
         })
       } else {
-        up.onprocess = function (e) {
+        up.onprogress = function (e) {
           conf.uploadProcess(e)
         }
       }
@@ -72,7 +68,6 @@ export default function (conf) {
   if(conf.headers.contentType=='multipart'){
     //上传文件类型
     const formData = new FormData();
-    console.log(conf.data)
     formData.append('file', conf.data);//multipart/form-data
     xhr.send(formData);
   }else{

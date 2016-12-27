@@ -7,7 +7,7 @@
  */
 export default function (size) {
     if(size/1024/1024>1){
-        return (size/1024/1024).toFixed(2)+"Mkb"
+        return (size/1024/1024).toFixed(2)+"M"
     }else{
         return (size/1024).toFixed(2)+"KB"
     }

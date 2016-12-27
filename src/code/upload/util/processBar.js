@@ -19,15 +19,16 @@ export  default  function (fileList,Suffix) {
         else {
             _html += "<li>";
         }
-        _html += "<div class='processDiv gradientProcess'></div>";
-        _html += "<span class='title'>" + fileList[i].name + "</span>";
-        _html += "<span class='size'>" + fileSizeFormat(fileList[i].size) + "</span>";
+        _html+=`<div class='processDiv gradientProcess'></div>
+                <span class='title'>${fileList[i].name}</span>
+                <span class='size'>${fileSizeFormat(fileList[i].size) }</span>`
+
         if (!checkSuffix(Suffix, fileList[i].type)) {
-            _html += "<span class='percent' style='visibility:visible'>已取消</span>";
-            _html += "<span class='status cancel' title='取消' style='display:none'></span>";
+            _html += `<span class='percent' style='visibility:visible'>已取消</span>
+                     <span class='status cancel' title='取消' style='display:none'></span>`
         } else {
-            _html += "<span class='percent'></span>";
-            _html += "<span class='status cancel' title='取消'></span>";
+            _html += `<span class='percent'></span>
+                      <span class='status cancel' title='取消'></span>`;
         }
         _html += "</li>";
     }
@@ -39,8 +40,8 @@ export  default  function (fileList,Suffix) {
     // $percentSpan = $('#uploadProcess .percent');
     // $status = $("#uploadProcess .status");
     //当li的高度大于UL高度时,Ul加滚动条
-    UlHeight = css($ul,'height');
-    LisHeight = css($li[0],'height');
+    UlHeight = css.height($ul);
+    LisHeight = css.height($li[0]);
     if (UlHeight < LisHeight * $li.length) {
         css($ul,'overflow-y', 'scroll')
     } else {

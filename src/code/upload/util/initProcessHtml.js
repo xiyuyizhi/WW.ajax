@@ -5,18 +5,19 @@
 import eventHandler from "./eventHandler"
 import css from "./css"
 
-function eventListener(uploadProcess){
+function eventListener(uploadProcess,count){
     const $minimize=uploadProcess.querySelector('.minimize');
     const $maximize=uploadProcess.querySelector('.maximize');
     const $close=uploadProcess.querySelector('#close');
     const $processUl=uploadProcess.querySelector('.processUl')
     //最小化
-    eventHandler.on($minimize,'click',function(){
+    eventHandler.on($maximize,'click',function(){
+        css(uploadProcess,'display','block')
         css(uploadProcess,'height','400px')
         css($minimize,'display','block')
         css($maximize,'display','none')
     })
-    eventHandler.on($maximize,'click',function(){
+    eventHandler.on($minimize,'click',function(){
         css(uploadProcess,'height','50px')
         css($minimize,'display','none')
         css($maximize,'display','block')
@@ -24,11 +25,11 @@ function eventListener(uploadProcess){
     eventHandler.on($close,'click',function(){
         css(uploadProcess,'display','none')
         $processUl.innerHTML=''
+        count.fileLen=0
     })
-
 }
 
-export default function(){
+export default function(count){
     const processHtml=`<div id='uploadProcess'>
                             <p class='head gradientHead'>
                                <span class='headMsg'>上传中</span> 
@@ -47,6 +48,6 @@ export default function(){
     document.querySelector('body').appendChild(div)
 
     const uploadProcess=document.querySelector('#uploadProcess')
-    eventListener(uploadProcess)
+    eventListener(uploadProcess,count)
 }
 
