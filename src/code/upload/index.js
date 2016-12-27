@@ -136,14 +136,14 @@ function uploading(fileList, originFilesLength, config, promiseArr) {
                 const $percentSpan = $li.querySelector('.percent')
                 const currentPercent = e.loaded / e.total;
                 const width = css.width($li);
-                css($percentSpan, 'visibility', 'visible');
+                css($percentSpan, 'display', 'block');
                 $percentSpan.innerHTML = (currentPercent * 100).toFixed(2) + "%"
                 css($processDiv, 'width', currentPercent * parseInt(width) + "px");
                 if (currentPercent >= 1) {
                     //完成
                     const $cancel = $li.querySelector('.cancel')
                     css($processDiv, 'display', 'none')
-                    css($percentSpan, 'visibility', 'hidden');
+                    css($percentSpan, 'display', 'none');
                     $cancel.className = 'status ok'
                 }
             },

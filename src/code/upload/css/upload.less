@@ -56,6 +56,7 @@
   .processUl {
     width: 100%;
     height: 350px;
+    overflow: auto;
     list-style: none;
     margin: 0px;
     padding: 0;
@@ -65,12 +66,9 @@
       line-height: 40px;
       color: #666;
       font-size: 0.9em;
-      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
       position: relative;
       z-index: 1;
-      &.lastLi {
-        border-bottom: 1px solid #eee;
-      }
       .processDiv {
         position: absolute;
         top: 0px;
@@ -86,6 +84,8 @@
         overflow: hidden;
         display: block;
         float: left;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         &.title {
           width: 250px;
           height: 100%;
@@ -95,7 +95,7 @@
           text-align: left;
         }
         &.percent {
-          visibility: hidden;
+          width: 80px;
         }
         &.status {
           width: 15px;
