@@ -14,44 +14,54 @@ import css from "./util/css"
 import "./css/upload.less"
 
 
-function upload(dom,conf){
+function upload(dom, conf) {
 
-    const count={
-        fileLen:0
+    const count = {
+        fileLen: 0
     };
 
     [].slice.call(dom)
 
-    conf=merge(defaultOption,conf)
-    const promiseArr=[];
-    const fileNames=conf.fileName
-    const multiple=conf.multiple
-    let ele=null
-    let fileList=[];
-    eventHandler.on(dom,'click',function(e){
+    conf = merge(defaultOption, conf)
+    const promiseArr = [];
+    const fileNames = conf.fileName
+    const multiple = conf.multiple
+    let ele = null
+    eventHandler.on(dom, 'click', function (e) {
 
-        function createEle(){
-            const ele=document.createElement('input')
-            ele.type='file'
-            ele.name=conf.fileName
-            ele.multiple=conf.multiple
-            ele.style='display:none';
+        function createEle() {
+            const ele = document.createElement('input')
+            ele.type = 'file'
+            ele.name = conf.fileName
+            ele.multiple = conf.multiple
+            ele.style = 'display:none';
             return ele
         }
 
-        if(!ele){
-            ele=createEle(fileNames,multiple) //input file
+        if (!ele) {
+            ele = createEle(fileNames, multiple) //input file
             e.target.appendChild(ele)
-            eventHandler.on(ele,'click',function(e){
+            eventHandler.on(ele, 'click', function (e) {
                 e.stopPropagation()
+            })
+            eventHandler.on(ele, 'change', function (e) {
+                if (conf.showType == 'process') {
+                    processHandler([].slice.call(e.target.files), conf)
+                }
+
+                if (conf.showType == 'loading') {
+
+                }
+
+                e.target.value = '';//同一张图片也可以多次上传
             })
         }
         /**
          * 上传进度 类型
          */
-        switch(conf.showType){
+        switch (conf.showType) {
             case 'process':
-                if(!document.querySelector('#uploadProcess')){
+                if (!document.querySelector('#uploadProcess')) {
                     initProcessHtml(count)
                 }
                 break;
@@ -64,92 +74,92 @@ function upload(dom,conf){
         /**
          * 监听文件变化事件处理
          */
-        eventHandler.on(ele,'change',function(e){
-            if(conf.showType=='process'){
-                processHandler( [].slice.call(e.target.files),conf )
-            }
-
-            if(conf.showType=='loading'){
-
-            }
-
-            e.target.value='';//同一张图片也可以多次上传了
-            eventHandler.off(ele,'change')
-        })
         ele.click();
     })
 
 
-    function processHandler(fileList,config){
-        const $uploadProcess=document.querySelector('#uploadProcess')
+    function processHandler(fileList, config) {
+        const $uploadProcess = document.querySelector('#uploadProcess')
         /**
          * 生成进度条
          */
-        processBar(fileList,config.allowSuffix)
-        $uploadProcess.querySelector('.headMsg').innerHTML='上传中'
+        processBar(fileList, config.allowSuffix)
+        $uploadProcess.querySelector('.headMsg').innerHTML = '上传中'
         $uploadProcess.querySelector('.maximize').click();
 
-        uploading(fileList,count.fileLen,config,promiseArr)
+        uploading(fileList, count.fileLen, config, promiseArr)
 
-        count.fileLen+=fileList.length
+        count.fileLen += fileList.length
 
-        Promise.all(promiseArr).then(function(succs){
-            console.log(succs)
-            //全部完成
-            $uploadProcess.querySelector('.headMsg').innerHTML='全部完成'
-            setTimeout(function(){
-                $uploadProcess.querySelector('.minimize').click();
-            },500);
-        },function(errors){
-          console.log(errors)
+        Promise.all(promiseArr).then(function (succs) {
+            if(!HttpFN.pendingRequests.length){
+                //全部完成
+                $uploadProcess.querySelector('.headMsg').innerHTML = '全部完成'
+                setTimeout(function () {
+                    $uploadProcess.querySelector('.minimize').click();
+                }, 500);
+            }
+
+        }, function (errors) {
+            console.log(errors)
         })
 
     }
 
 }
 
-function uploading(fileList,originFilesLength,config,promiseArr){
-    fileList.forEach( (file,index) => {
-        const $li=document.querySelectorAll('.processUl li')[originFilesLength+index]
-        const $cancel=$li.querySelector('.cancel')
-        const $processDiv=$li.querySelector(".processDiv");
-        const $percentSpan=$li.querySelector('.percent')
-        if(!checkSuffix(config.allowSuffix,file.type)){
+/**
+ *
+ * @param {file} fileList 选择的文件
+ * @param {number} originFilesLength 保存的之前已上传的文件数量
+ * @param {object} config 配置项
+ * @param {promise} promiseArr 用来存放 HttpFn返回的promise
+ */
+function uploading(fileList, originFilesLength, config, promiseArr) {
+    fileList.forEach((file, index) => {
+        if (!checkSuffix(config.allowSuffix, file.type)) {
             return;
         }
-        const con={
-            url:config.url,
-            type:'post',
-            data:file,
-            headers:{
-                contentType:'multipart',
-                dataType:'text'
+        const con = {
+            url: config.url,
+            type: 'post',
+            data: file,
+            headers: {
+                contentType: 'multipart',
+                dataType: 'text'
             },
-            success:config.success,
-            error:config.error,
-            uploadProcess:function(e){
+            success: config.success,
+            error: config.error,
+            uploadProcess: function (e) {
+                const $li = document.querySelectorAll('.processUl li')[originFilesLength + index]
+                const $processDiv = $li.querySelector(".processDiv");
+                const $percentSpan = $li.querySelector('.percent')
                 const currentPercent = e.loaded / e.total;
-                const width=css.width($li);
-                css($percentSpan,'visibility','visible');
-                $percentSpan.innerHTML=(currentPercent * 100).toFixed(2) + "%"
-                css($processDiv,'width',currentPercent * parseInt(width) + "px");
-                if(currentPercent>=1){
+                const width = css.width($li);
+                css($percentSpan, 'visibility', 'visible');
+                $percentSpan.innerHTML = (currentPercent * 100).toFixed(2) + "%"
+                css($processDiv, 'width', currentPercent * parseInt(width) + "px");
+                if (currentPercent >= 1) {
                     //完成
-                    const $cancel=$li.querySelector('.cancel')
-                    css($processDiv,'display','none')
-                    css($percentSpan,'visibility','hidden');
-                    $cancel.className='status ok'
+                    const $cancel = $li.querySelector('.cancel')
+                    css($processDiv, 'display', 'none')
+                    css($percentSpan, 'visibility', 'hidden');
+                    $cancel.className = 'status ok'
                 }
             },
-            abort:function(xhr){
+            abort: function (xhr) {
                 /**
                  * 绑定取消事件
                  */
-                eventHandler.on($cancel,'click',function(){
+                const $li = document.querySelectorAll('.processUl li')[originFilesLength + index]
+                const $cancel = $li.querySelector('.cancel')
+                const $processDiv = $li.querySelector(".processDiv");
+                const $percentSpan = $li.querySelector('.percent')
+                eventHandler.on($cancel, 'click', function () {
                     xhr.abort();
-                    css($processDiv,'display','none')
-                    css($cancel,'display','none')
-                    $percentSpan.innerHTML='已取消';
+                    css($processDiv, 'display', 'none')
+                    css($cancel, 'display', 'none')
+                    $percentSpan.innerHTML = '已取消';
                 })
             }
         }
