@@ -15,10 +15,10 @@ WW.http.Interceptor(() => ({
   request(config) {
     config.headers.token = 'tokennnn'
     loading.className += ' show'
-    console.log(WW.http.pendingRequests)
     return config
   },
   response(data) {
+    console.log(data)
     if (!WW.http.pendingRequests.length) {
       loading.className = 'loading'
     }
@@ -27,7 +27,6 @@ WW.http.Interceptor(() => ({
   responseError(err) {
     console.log(err)
     loading.className = 'loading'
-    console.log(WW.http.pendingRequests)
   },
 }))
 

@@ -52,7 +52,7 @@
 
 /**
  * 成功处理函数
- * @param {[type]} data server data
+ * @param {object} data server data
  * @param {object} xhr xhr
  * @param {function} successFn success handler
  * @param {function} resolve promise resolve
@@ -115,23 +115,40 @@
      const confCopy = this.conf
      const interceptor = this.interceptor
      const pendingRequests = this.pendingRequests
+
+      xhr.onabort=function(){
+          console.log('abort..........')
+          pendingRequests.splice(pendingRequests.indexOf(confCopy), 1)
+      }
+
      return new Promise((resolve, reject) => {
        xhr.onreadystatechange = function () {
          if (xhr.readyState === 4) {
            pendingRequests.splice(pendingRequests.indexOf(confCopy), 1)
-                    // success
+           // success
            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
              const data = adapterResponse(confCopy.headers.dataType, xhr)
              interceptor.response && interceptor.response(data)
              resolveFn(data, xhr, confCopy.success, resolve)
              return
            }
-                    // error
-           interceptor.responseError && interceptor.responseError({
-             status: xhr.status,
-             statusText: xhr.statusText,
-           })
-           rejectFn(xhr, confCopy.error, reject)
+
+             if(confCopy.headers.contentType!=='multipart'){
+                 // error
+                 interceptor.responseError && interceptor.responseError({
+                     status: xhr.status,
+                     statusText: xhr.statusText,
+                 })
+                 rejectFn(xhr, confCopy.error, reject)
+             }else{
+                 interceptor.response && interceptor.response({
+                     status:"取消上传成功"
+                 })
+                 resolveFn({
+                     status:"取消上传成功"
+                 }, xhr, confCopy.success, resolve)
+             }
+
          }
        }
      })

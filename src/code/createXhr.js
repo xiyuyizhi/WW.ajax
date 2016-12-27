@@ -58,6 +58,11 @@ export default function (conf) {
         }
       }
     }
+
+    if(conf.abort){
+      conf.abort(xhr)
+    }
+
   }
 
   xhr.open(conf.type, conf.url, conf.async)
@@ -73,6 +78,8 @@ export default function (conf) {
   }else{
     xhr.send(JSON.stringify(conf.data) || null)
   }
+
+
 
   return xhr
 }

@@ -47,19 +47,21 @@ function off(doms,eventType, listener, isCapture) {
     var originFn = 'originFn',
         eventTypeFn = eventType + 'Fn',
         args = arguments;
-
+    if(!doms.length){
+        doms=[doms]
+    }
     doms.forEach( ele => {
         var index = 0;
         if (args.length == 1) {
             //移除元素指定事件类型的所有事件处理程序
             for (var i = 0; i < ele[eventTypeFn].length; i++) {
-                EventHandle.off(ele, eventType, ele[eventTypeFn][i], isCapture);
+                off(ele, eventType, ele[eventTypeFn][i], isCapture);
             }
             ele[originFn] = [];
             ele[eventTypeFn] = [];
         } else {
             //移除元素指定事件类型的指定事件处理程序
-            UTIL.forEach(ele[originFn], function (itemListener, dex) {
+            ele[originFn].forEach( (itemListener,dex) => {
                 if (itemListener == listener) {
                     index = dex;
                 }

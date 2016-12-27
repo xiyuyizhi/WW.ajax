@@ -17,5 +17,6 @@ export default {
   async: true,
   success: null, //
   error: null, //
-  uploadProcess:null
+  uploadProcess:null,
+  abort:null
 }
