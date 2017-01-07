@@ -7,7 +7,7 @@ import eventHandler from "./util/eventHandler"
 import initProcessHtml from "./util/initProcessHtml"
 import processBar from "./util/processBar"
 import checkSuffix from "./util/checkSuffix"
-import HttpFN from "../WW"
+import Http from "../code"
 import merge from "../util/mergeObject"
 import css from "./util/css"
 
@@ -27,9 +27,10 @@ function upload(dom, conf) {
     const fileNames = conf.fileName
     const multiple = conf.multiple
     let ele = null
+
     eventHandler.on(dom, 'click', function (e) {
 
-        function createEle() {
+        function createEle(conf) {
             const ele = document.createElement('input')
             ele.type = 'file'
             ele.name = conf.fileName
@@ -37,16 +38,15 @@ function upload(dom, conf) {
             ele.style = 'display:none';
             return ele
         }
-
         if (!ele) {
-            ele = createEle(fileNames, multiple) //input file
+            ele = createEle(conf) //input file
             e.target.appendChild(ele)
             eventHandler.on(ele, 'click', function (e) {
                 e.stopPropagation()
             })
             eventHandler.on(ele, 'change', function (e) {
                 if (conf.showType == 'process') {
-                    processHandler([].slice.call(e.target.files), conf)
+                    processUpload([].slice.call(e.target.files), conf)
                 }
 
                 if (conf.showType == 'loading') {
@@ -77,8 +77,16 @@ function upload(dom, conf) {
         ele.click();
     })
 
+    eventHandler.on(window,'beforeunload',function(){
+        localStorage.removeItem('originLen')
+    })
 
-    function processHandler(fileList, config) {
+    /**
+     * 显示效果为process的处理
+     * @param fileList
+     * @param config
+     */
+    function processUpload(fileList, config) {
         const $uploadProcess = document.querySelector('#uploadProcess')
         /**
          * 生成进度条
@@ -87,12 +95,18 @@ function upload(dom, conf) {
         $uploadProcess.querySelector('.headMsg').innerHTML = '上传中'
         $uploadProcess.querySelector('.maximize').click();
 
-        uploading(fileList, count.fileLen, config, promiseArr)
+        if(localStorage.getItem('originLen')){
+            localStorage.setItem('originLen',Number(localStorage.getItem('originLen')) + count.fileLen)
+        }else{
+            localStorage.setItem('originLen',count.fileLen)
+        }
 
-        count.fileLen += fileList.length
+        doUpload(fileList,config, promiseArr)
 
-        Promise.all(promiseArr).then(function (succs) {
-            if(!HttpFN.pendingRequests.length){
+        localStorage.setItem('originLen',Number(localStorage.getItem('originLen')) + fileList.length)
+
+        Promise.all(promiseArr).then(function () {
+            if(!Http.pendingRequests.length){
                 //全部完成
                 $uploadProcess.querySelector('.headMsg').innerHTML = '全部完成'
                 setTimeout(function () {
@@ -106,6 +120,10 @@ function upload(dom, conf) {
 
     }
 
+    function loadingUpload(){
+
+    }
+
 }
 
 /**
@@ -113,9 +131,10 @@ function upload(dom, conf) {
  * @param {file} fileList 选择的文件
  * @param {number} originFilesLength 保存的之前已上传的文件数量
  * @param {object} config 配置项
- * @param {promise} promiseArr 用来存放 HttpFn返回的promise
+ * @param {promise} promiseArr 用来存放 Http返回的promise
  */
-function uploading(fileList, originFilesLength, config, promiseArr) {
+function doUpload(fileList, config, promiseArr) {
+    const originLen=Number(localStorage.getItem('originLen'))//之前已经上传过的数量
     fileList.forEach((file, index) => {
         if (!checkSuffix(config.allowSuffix, file.type)) {
             return;
@@ -131,7 +150,7 @@ function uploading(fileList, originFilesLength, config, promiseArr) {
             success: config.success,
             error: config.error,
             uploadProcess: function (e) {
-                const $li = document.querySelectorAll('.processUl li')[originFilesLength + index]
+                const $li = document.querySelectorAll('.processUl li')[originLen+index]
                 const $processDiv = $li.querySelector(".processDiv");
                 const $percentSpan = $li.querySelector('.percent')
                 const currentPercent = e.loaded / e.total;
@@ -151,7 +170,7 @@ function uploading(fileList, originFilesLength, config, promiseArr) {
                 /**
                  * 绑定取消事件
                  */
-                const $li = document.querySelectorAll('.processUl li')[originFilesLength + index]
+                const $li = document.querySelectorAll('.processUl li')[originLen+index]
                 const $cancel = $li.querySelector('.cancel')
                 const $processDiv = $li.querySelector(".processDiv");
                 const $percentSpan = $li.querySelector('.percent')
@@ -163,7 +182,7 @@ function uploading(fileList, originFilesLength, config, promiseArr) {
                 })
             }
         }
-        promiseArr.push(HttpFN(con))
+        promiseArr.push(Http(con))
     })
 }
 

@@ -11,13 +11,12 @@ function css(dom, prop, value) {
     } else {
         //get
         if (document.defaultView.getComputedStyle) {
-            // if (window.getComputedStyle.getPropertyValue) {
-            //     return window.getComputedStyle(dom, null).getPropertyValue(prop)
-            // }
-            // else {
-            //     return window.getComputedStyle(dom)[prop]
-            // }
-            return document.defaultView.getComputedStyle(dom,null)[prop]
+            if (window.getComputedStyle.getPropertyValue) {
+                return window.getComputedStyle(dom, null).getPropertyValue(prop)
+            }
+            else {
+                return window.getComputedStyle(dom)[prop]
+            }
         } else if (dom.currentStyle) {
             return dom.currentStyle[prop]
         }

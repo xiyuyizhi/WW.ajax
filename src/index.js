@@ -2,11 +2,11 @@
  * Created by xiyuyizhi on 16-12-20.
  */
 
-import HttpFn from './code/WW'
+import Http from './code/code'
 import upload from './code/upload'
 
 const WW = {
-  http: HttpFn,
+  http: Http,
 }
 
 const loading = document.querySelector('.loading')
@@ -79,8 +79,12 @@ WW.http.Interceptor(() => ({
 // })
 
 
-const btn = document.querySelectorAll('.btn')
-
+const btn = document.querySelector('.btn')
+const btn1=document.querySelector('.btn1')
 upload(btn, {
+  url:'/api/upload'
+})
+
+upload(btn1,{
   url:'/api/upload'
 })

@@ -23,6 +23,7 @@ function eventListener(uploadProcess,count){
         css($maximize,'display','block')
     })
     eventHandler.on($close,'click',function(){
+        localStorage.removeItem('originLen')
         css(uploadProcess,'display','none')
         $processUl.innerHTML=''
         count.fileLen=0
