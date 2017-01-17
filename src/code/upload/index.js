@@ -81,8 +81,6 @@ function upload(selector, conf) {
      */
     function processUpload(fileList, config) {
         const $uploadProcess = $$('#uploadProcess')
-        console.log($uploadProcess)
-        console.log(JSON.stringify($uploadProcess))
         /**
          * 生成进度条
          */
@@ -146,35 +144,31 @@ function doUpload(fileList, config, promiseArr) {
             success: config.success,
             error: config.error,
             uploadProcess: function (e) {
-                const $li = document.querySelectorAll('.processUl li')[originLen+index]
-                const $processDiv = $li.querySelector(".processDiv");
-                const $percentSpan = $li.querySelector('.percent')
+                const $li = $$('.processUl li').eq(originLen+index)
+                const $processDiv = $li.find(".processDiv");
+                const $percentSpan = $li.find('.percent')
                 const currentPercent = e.loaded / e.total;
-                const width = css.width($li);
-                css($percentSpan, 'display', 'block');
-                $percentSpan.innerHTML = (currentPercent * 100).toFixed(2) + "%"
-                css($processDiv, 'width', currentPercent * parseInt(width) + "px");
+                const width = $li.css('width');
+                $percentSpan.css('display','block').html((currentPercent * 100).toFixed(2) + "%")
+                $processDiv.css('width',currentPercent * parseInt(width) + "px")
                 if (currentPercent >= 1) {
                     //完成
-                    const $cancel = $li.querySelector('.cancel')
-                    css($processDiv, 'display', 'none')
-                    css($percentSpan, 'display', 'none');
-                    $cancel.className = 'status ok'
+                    const $cancel = $li.find('.cancel')
+                    $processDiv.css('display', 'none')
+                    $percentSpan.css('display', 'none');
+                    $cancel.get(0).className = 'status ok'
                 }
             },
             abort: function (xhr) {
                 /**
                  * 绑定取消事件
                  */
-                const $li = document.querySelectorAll('.processUl li')[originLen+index]
-                const $cancel = $li.querySelector('.cancel')
-                const $processDiv = $li.querySelector(".processDiv");
-                const $percentSpan = $li.querySelector('.percent')
-                eventHandler.on($cancel, 'click', function () {
+                const $li = $$('.processUl li').eq(originLen+index)
+                $li.find('.cancel').on('click', function () {
                     xhr.abort();
-                    css($processDiv, 'display', 'none')
-                    css($cancel, 'display', 'none')
-                    $percentSpan.innerHTML = '已取消';
+                    $li.find(".processDiv").css('display', 'none')
+                    $li.find('.cancel').css('display', 'none')
+                    $li.find('.percent').html('已取消')
                 })
             }
         }

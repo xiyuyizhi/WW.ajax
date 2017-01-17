@@ -48,8 +48,9 @@ class Query{
 	}
 
 	eq(index){
-		this.elements=[this.elements[index]]
-		return this
+		const newQ=new Query()
+		newQ.elements=[this.elements[index]]
+		return newQ
 	}
 
 	get(index){
