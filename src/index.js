@@ -79,12 +79,10 @@ WW.http.Interceptor(() => ({
 // })
 
 
-const btn = document.querySelector('.btn')
-const btn1=document.querySelector('.btn1')
-upload(btn, {
+upload('.btn', {
   url:'/api/upload'
 })
 
-upload(btn1,{
+upload('.btn1',{
   url:'/api/upload'
 })

@@ -33,7 +33,7 @@ function eventListener(uploadProcess,count){
 export default function(count){
     const processHtml=`<div id='uploadProcess'>
                             <p class='head gradientHead'>
-                               <span class='headMsg'>上传中</span> 
+                               <span class='headMsg'></span> 
                                <span class='menu'>
                                    <span class='minimize'></span>
                                     <span class='maximize'></span>

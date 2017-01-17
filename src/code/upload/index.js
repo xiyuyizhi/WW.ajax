@@ -10,52 +10,22 @@ import checkSuffix from "./util/checkSuffix"
 import Http from "../code"
 import merge from "../util/mergeObject"
 import css from "./util/css"
+import $$ from "./util/query"
 
 import "./css/upload.less"
 
 
-function upload(dom, conf) {
+function upload(selector, conf) {
 
     const count = {
         fileLen: 0
     };
-
-    [].slice.call(dom)
-
     conf = merge(defaultOption, conf)
     const promiseArr = [];
-    const fileNames = conf.fileName
-    const multiple = conf.multiple
     let ele = null
 
-    eventHandler.on(dom, 'click', function (e) {
+    $$(selector).on('click',function (e) {
 
-        function createEle(conf) {
-            const ele = document.createElement('input')
-            ele.type = 'file'
-            ele.name = conf.fileName
-            ele.multiple = conf.multiple
-            ele.style = 'display:none';
-            return ele
-        }
-        if (!ele) {
-            ele = createEle(conf) //input file
-            e.target.appendChild(ele)
-            eventHandler.on(ele, 'click', function (e) {
-                e.stopPropagation()
-            })
-            eventHandler.on(ele, 'change', function (e) {
-                if (conf.showType == 'process') {
-                    processUpload([].slice.call(e.target.files), conf)
-                }
-
-                if (conf.showType == 'loading') {
-
-                }
-
-                e.target.value = '';//同一张图片也可以多次上传
-            })
-        }
         /**
          * 上传进度 类型
          */
@@ -71,13 +41,36 @@ function upload(dom, conf) {
                 throw new Error('need a property showType and the value can be only process or loading')
         }
 
+        function createEle(conf) {
+            const ele = document.createElement('input')
+            ele.type = 'file'
+            ele.name = conf.fileName
+            ele.multiple = conf.multiple
+            ele.style = 'display:none';
+            return ele
+        }
+        if (!ele) {
+            ele = createEle(conf) //input file
+            e.target.appendChild(ele)
+            $$(selector).find('input').on('click',function (e) {
+                e.stopPropagation()
+            }).on('change',function (e) {
+                if (conf.showType == 'process') {
+                    processUpload([].slice.call(e.target.files), conf)
+                }
+                if (conf.showType == 'loading') {
+
+                }
+                e.target.value = '';//同一张图片也可以多次上传
+            })
+        }
+
         /**
          * 监听文件变化事件处理
          */
         ele.click();
     })
-
-    eventHandler.on(window,'beforeunload',function(){
+    $$(window).on('beforeunload',function(){
         localStorage.removeItem('originLen')
     })
 
@@ -87,13 +80,16 @@ function upload(dom, conf) {
      * @param config
      */
     function processUpload(fileList, config) {
-        const $uploadProcess = document.querySelector('#uploadProcess')
+        const $uploadProcess = $$('#uploadProcess')
+        console.log($uploadProcess)
+        console.log(JSON.stringify($uploadProcess))
         /**
          * 生成进度条
          */
         processBar(fileList, config.allowSuffix)
-        $uploadProcess.querySelector('.headMsg').innerHTML = '上传中'
-        $uploadProcess.querySelector('.maximize').click();
+
+        $uploadProcess.find('.headMsg').html('上传中')
+        $uploadProcess.find('.maximize').get(0).click();
 
         if(localStorage.getItem('originLen')){
             localStorage.setItem('originLen',Number(localStorage.getItem('originLen')) + count.fileLen)
@@ -108,9 +104,9 @@ function upload(dom, conf) {
         Promise.all(promiseArr).then(function () {
             if(!Http.pendingRequests.length){
                 //全部完成
-                $uploadProcess.querySelector('.headMsg').innerHTML = '全部完成'
+                $uploadProcess.find('.headMsg').html('全部完成')
                 setTimeout(function () {
-                    $uploadProcess.querySelector('.minimize').click();
+                    $uploadProcess.find('.minimize').get(0).click();
                 }, 500);
             }
 
