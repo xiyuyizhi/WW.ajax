@@ -3,9 +3,9 @@
  */
 
 import defaultOption from "./var/defaultOption"
+import $$ from "./util/query"
 import initProcessHtml from "./util/initProcessHtml"
 import merge from "../util/mergeObject"
-import $$ from "./util/query"
 import processUpload from "./util/processUpload"
 import loadingUpload from "./util/loadingUpload"
 
@@ -52,7 +52,7 @@ function upload(selector, conf) {
                     processUpload(Array.from(e.target.files), conf)
                 }
                 if (conf.showType == 'loading') {
-                    processUpload(Array.from(e.target.files),conf)
+                    loadingUpload(Array.from(e.target.files),conf)
                 }
                 e.target.value = '';//同一张图片也可以多次上传
             })

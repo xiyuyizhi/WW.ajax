@@ -2,8 +2,8 @@
  * Created by evannayf on 17-1-7.
  */
 
-import cssFn from "./css"
-import eventHandler from "./eventHandler"
+import cssFn from "./code/css"
+import eventHandler from "./code/eventHandler"
 
 class Query{
 

@@ -2,8 +2,8 @@
  * Created by xiyuyizhi on 16-12-26.
  */
 
-import eventHandler from "./eventHandler"
-import css from "./css"
+import eventHandler from "./code/eventHandler"
+import css from "./code/css"
 
 function eventListener(uploadProcess){
     const $minimize=uploadProcess.querySelector('.minimize');
