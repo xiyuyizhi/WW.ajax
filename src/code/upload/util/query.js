@@ -98,6 +98,43 @@ class Query{
 			eventHandler.off(ele,args[0],args[1],args[2])
 		})
 	}
+
+	show(){
+		this.css('display','inline-block')
+		return this
+	}
+
+	hide(){
+		this.css('display','none')
+		return this
+	}
+
+	addClass(cls){
+		this.elements.forEach( ele => {
+			ele.className+=" "+cls
+		})
+		return this
+	}
+
+	removeClass(cls){
+		this.elements.forEach( ele =>{
+			let classArr=ele.className.split(' ')
+			classArr=classArr.filter( item => {
+				return !(item==cls)
+			})
+			ele.className=classArr.join(" ")
+		})
+		return this
+	}
+
+	hasClass(cls){
+		const pattern=new RegExp('(\\s+'+cls+'|'+cls+'\\s+)')
+		for(let ele of this.elements){
+			return pattern.test(ele.className)
+		}
+
+	}
+
 }
 
 export default function(seletor){

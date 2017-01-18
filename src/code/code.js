@@ -14,7 +14,6 @@ import valid from './util/valid'
  * @constructor
  */
 function HttpFn(config) {
-    // HttpFn.start()
   const key = valid(config)
   if (key) {
     throw new Error(`property ${key} not allowed`)

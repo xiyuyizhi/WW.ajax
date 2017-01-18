@@ -27,7 +27,7 @@ WW.http.Interceptor(() => ({
   responseError(err) {
     console.log(err)
     loading.className = 'loading'
-  },
+  }
 }))
 
 // WW.http({

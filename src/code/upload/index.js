@@ -3,25 +3,18 @@
  */
 
 import defaultOption from "./var/defaultOption"
-import eventHandler from "./util/eventHandler"
 import initProcessHtml from "./util/initProcessHtml"
-import processBar from "./util/processBar"
-import checkSuffix from "./util/checkSuffix"
-import Http from "../code"
 import merge from "../util/mergeObject"
-import css from "./util/css"
 import $$ from "./util/query"
+import processUpload from "./util/processUpload"
+import loadingUpload from "./util/loadingUpload"
 
 import "./css/upload.less"
 
 
 function upload(selector, conf) {
 
-    const count = {
-        fileLen: 0
-    };
     conf = merge(defaultOption, conf)
-    const promiseArr = [];
     let ele = null
 
     $$(selector).on('click',function (e) {
@@ -32,7 +25,7 @@ function upload(selector, conf) {
         switch (conf.showType) {
             case 'process':
                 if (!document.querySelector('#uploadProcess')) {
-                    initProcessHtml(count)
+                    initProcessHtml()
                 }
                 break;
             case  'loading':
@@ -56,10 +49,10 @@ function upload(selector, conf) {
                 e.stopPropagation()
             }).on('change',function (e) {
                 if (conf.showType == 'process') {
-                    processUpload([].slice.call(e.target.files), conf)
+                    processUpload(Array.from(e.target.files), conf)
                 }
                 if (conf.showType == 'loading') {
-
+                    processUpload(Array.from(e.target.files),conf)
                 }
                 e.target.value = '';//同一张图片也可以多次上传
             })
@@ -74,106 +67,7 @@ function upload(selector, conf) {
         localStorage.removeItem('originLen')
     })
 
-    /**
-     * 显示效果为process的处理
-     * @param fileList
-     * @param config
-     */
-    function processUpload(fileList, config) {
-        const $uploadProcess = $$('#uploadProcess')
-        /**
-         * 生成进度条
-         */
-        processBar(fileList, config.allowSuffix)
-
-        $uploadProcess.find('.headMsg').html('上传中')
-        $uploadProcess.find('.maximize').get(0).click();
-
-        if(localStorage.getItem('originLen')){
-            localStorage.setItem('originLen',Number(localStorage.getItem('originLen')) + count.fileLen)
-        }else{
-            localStorage.setItem('originLen',count.fileLen)
-        }
-
-        doUpload(fileList,config, promiseArr)
-
-        localStorage.setItem('originLen',Number(localStorage.getItem('originLen')) + fileList.length)
-
-        Promise.all(promiseArr).then(function () {
-            if(!Http.pendingRequests.length){
-                //全部完成
-                $uploadProcess.find('.headMsg').html('全部完成')
-                setTimeout(function () {
-                    $uploadProcess.find('.minimize').get(0).click();
-                }, 500);
-            }
-
-        }, function (errors) {
-            console.log(errors)
-        })
-
-    }
-
-    function loadingUpload(){
-
-    }
-
 }
 
-/**
- *
- * @param {file} fileList 选择的文件
- * @param {number} originFilesLength 保存的之前已上传的文件数量
- * @param {object} config 配置项
- * @param {promise} promiseArr 用来存放 Http返回的promise
- */
-function doUpload(fileList, config, promiseArr) {
-    const originLen=Number(localStorage.getItem('originLen'))//之前已经上传过的数量
-    fileList.forEach((file, index) => {
-        if (!checkSuffix(config.allowSuffix, file.type)) {
-            return;
-        }
-        const con = {
-            url: config.url,
-            type: 'post',
-            data: file,
-            headers: {
-                contentType: 'multipart',
-                dataType: 'text'
-            },
-            success: config.success,
-            error: config.error,
-            uploadProcess: function (e) {
-                const $li = $$('.processUl li').eq(originLen+index)
-                const $processDiv = $li.find(".processDiv");
-                const $percentSpan = $li.find('.percent')
-                const currentPercent = e.loaded / e.total;
-                const width = $li.css('width');
-                $percentSpan.css('display','block').html((currentPercent * 100).toFixed(2) + "%")
-                $processDiv.css('width',currentPercent * parseInt(width) + "px")
-                if (currentPercent >= 1) {
-                    //完成
-                    const $cancel = $li.find('.cancel')
-                    $processDiv.css('display', 'none')
-                    $percentSpan.css('display', 'none');
-                    $cancel.get(0).className = 'status ok'
-                }
-            },
-            abort: function (xhr) {
-                /**
-                 * 绑定取消事件
-                 */
-                const $li = $$('.processUl li').eq(originLen+index)
-                $li.find('.cancel').on('click', function () {
-                    xhr.abort();
-                    $li.find(".processDiv").css('display', 'none')
-                    $li.find('.cancel').css('display', 'none')
-                    $li.find('.percent').html('已取消')
-                })
-            }
-        }
-        promiseArr.push(Http(con))
-    })
-}
 
 export default upload

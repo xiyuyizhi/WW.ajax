@@ -5,7 +5,7 @@
 import eventHandler from "./eventHandler"
 import css from "./css"
 
-function eventListener(uploadProcess,count){
+function eventListener(uploadProcess){
     const $minimize=uploadProcess.querySelector('.minimize');
     const $maximize=uploadProcess.querySelector('.maximize');
     const $close=uploadProcess.querySelector('#close');
@@ -26,7 +26,7 @@ function eventListener(uploadProcess,count){
         localStorage.removeItem('originLen')
         css(uploadProcess,'display','none')
         $processUl.innerHTML=''
-        count.fileLen=0
+        //count.fileLen=0
     })
 }
 
