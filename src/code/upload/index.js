@@ -5,7 +5,6 @@
 import defaultOption from "./var/defaultOption"
 import $$ from "./util/query"
 import initProcessHtml from "./util/initProcessHtml"
-import merge from "../util/mergeObject"
 import processUpload from "./util/processUpload"
 import loadingUpload from "./util/loadingUpload"
 
@@ -14,7 +13,7 @@ import "./css/upload.less"
 
 function upload(selector, conf) {
 
-    conf = merge(defaultOption, conf)
+    conf = Object.assign(defaultOption, conf)
     let ele = null
 
     $$(selector).on('click',function (e) {

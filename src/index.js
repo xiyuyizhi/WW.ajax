@@ -11,24 +11,24 @@ const WW = {
 
 const loading = document.querySelector('.loading')
 
-WW.http.Interceptor(() => ({
+WW.http.Interceptor({
   request(config) {
     config.headers.token = 'tokennnn'
     loading.className += ' show'
     return config
   },
   response(data) {
-    console.log(data)
     if (!WW.http.pendingRequests.length) {
       loading.className = 'loading'
     }
+    console.log(data)
     return data
   },
   responseError(err) {
     console.log(err)
     loading.className = 'loading'
   }
-}))
+})
 
 // WW.http({
 //   url: 'api/users/:userId',
@@ -57,26 +57,26 @@ WW.http.Interceptor(() => ({
 //   console.log('post success')
 //   console.log(data)
 // })
-//
-//
-// WW.http.get('api/users/:userId', {
-//   userId: 1,
-// }).then((data) => {
-//   console.log('success')
-//   console.log(data)
-// })
-//
-//
-// WW.http.post('api/users',
-//   {
-//     username: 'ww',
-//     age: 22,
-//   },
-// ).then((data) => {
-//   console.log('post success')
-//   console.log(data)
-//   console.log(data.headers('content-type'))
-// })
+
+
+WW.http.get('api/users/:userId', {
+  userId: 1,
+}).then((data) => {
+  console.log('get success')
+  console.log(data)
+})
+
+
+WW.http.post('api/users',
+  {
+    username: 'ww',
+    age: 22,
+  }
+).then((data) => {
+  console.log('post success')
+  console.log(data)
+  console.log('get header: '+data.headers('content-type'))
+})
 
 
 upload('.btn', {

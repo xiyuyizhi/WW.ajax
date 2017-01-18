@@ -95,6 +95,7 @@ export default class Transport {
 	 */
 	init(conf) {
 		conf = merge(clone(options), clone(conf))
+
 		/**
 		 * 处理传递的参数
 		 */
