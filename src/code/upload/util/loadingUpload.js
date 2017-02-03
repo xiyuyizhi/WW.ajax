@@ -22,9 +22,17 @@ export default function(fileList, config){
 	const promiseArr=[]
 	const loadedArr=Array(count).fill().map(item => 0)
 	let totalSize=0
-	fileList.forEach( item => {
+	for(const item of fileList){
+		console.log(item)
 		totalSize+=item.size
-	})
+		if (!checkSuffix(config.allowSuffix, item.type)) {
+			$$('#loadingUpload').find('.loadingTxt').html(`${item.name}格式不允许`)
+			setTimeout( function(){
+				$$('#loadingUpload').hide()
+			},1000)
+			return;
+		}
+	}
 	$$('#loadingUpload').show()
 	fileList.forEach((file, index) => {
 		if (!checkSuffix(config.allowSuffix, file.type)) {

@@ -72,6 +72,11 @@ var config={
                 target: 'http://localhost:3005/',
                 changeOrigin: true,
                 secure: false
+            },
+            '/rest/*':{
+                target: 'http://localhost:9000/',
+                changeOrigin: true,
+                secure: false
             }
         }
     }

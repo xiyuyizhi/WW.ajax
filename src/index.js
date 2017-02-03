@@ -4,11 +4,12 @@
 
 import Http from './code/code'
 import upload from './code/upload'
+import download from "./code/download"
 
 const WW = {
   http: Http,
 }
-
+WW.http['upload']=upload
 const loading = document.querySelector('.loading')
 
 WW.http.Interceptor({
@@ -21,7 +22,6 @@ WW.http.Interceptor({
     if (!WW.http.pendingRequests.length) {
       loading.className = 'loading'
     }
-    console.log(data)
     return data
   },
   responseError(err) {
@@ -79,12 +79,17 @@ WW.http.post('api/users',
 })
 
 
-upload('.btn', {
+WW.http.upload('.btn', {
   url:'/api/upload',
   showType:'process'
 })
 
-upload('.btn1',{
+WW.http.upload('.btn1',{
   url:'/api/upload',
   showType:'loading'
 })
+
+download({
+  url:'http://imgsrc.baidu.com/baike/pic/item/78310a55b319ebc410d913d68726cffc1f1716df.jpg',
+  downType:'file'
+});

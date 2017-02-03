@@ -21,5 +21,8 @@ export default {
     true: true,
     false: false,
   },
-
+  responseType:{
+    name:'responseType',
+    arraybuffer:'arraybuffer'
+  }
 }
