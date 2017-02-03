@@ -5,6 +5,7 @@
 import defaultOption from "./var/defaultOption"
 import $$ from "./util/query"
 import initProcessHtml from "./util/initProcessHtml"
+import initLoadingHtml from "./util/initLoadingHtml"
 import processUpload from "./util/processUpload"
 import loadingUpload from "./util/loadingUpload"
 
@@ -13,9 +14,9 @@ import "./css/upload.less"
 
 function upload(selector, conf) {
 
-    conf = Object.assign(defaultOption, conf)
+    conf = Object.assign({},defaultOption, conf)
+    console.log(conf)
     let ele = null
-
     $$(selector).on('click',function (e) {
 
         /**
@@ -28,6 +29,9 @@ function upload(selector, conf) {
                 }
                 break;
             case  'loading':
+                if(!document.querySelector('#uploadProcess')){
+                    initLoadingHtml()
+                }
                 break;
             default:
                 throw new Error('need a property showType and the value can be only process or loading')

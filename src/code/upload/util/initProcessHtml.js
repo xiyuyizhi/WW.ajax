@@ -30,7 +30,7 @@ function eventListener(uploadProcess){
     })
 }
 
-export default function(count){
+export default function(){
     const processHtml=`<div id='uploadProcess'>
                             <p class='head gradientHead'>
                                <span class='headMsg'></span> 
@@ -49,6 +49,6 @@ export default function(count){
     document.querySelector('body').appendChild(div)
 
     const uploadProcess=document.querySelector('#uploadProcess')
-    eventListener(uploadProcess,count)
+    eventListener(uploadProcess)
 }
 

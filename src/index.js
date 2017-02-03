@@ -14,7 +14,7 @@ const loading = document.querySelector('.loading')
 WW.http.Interceptor({
   request(config) {
     config.headers.token = 'tokennnn'
-    loading.className += ' show'
+    //loading.className += ' show'
     return config
   },
   response(data) {
@@ -80,9 +80,11 @@ WW.http.post('api/users',
 
 
 upload('.btn', {
-  url:'/api/upload'
+  url:'/api/upload',
+  showType:'process'
 })
 
 upload('.btn1',{
-  url:'/api/upload'
+  url:'/api/upload',
+  showType:'loading'
 })
