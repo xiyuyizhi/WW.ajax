@@ -4,10 +4,6 @@
 
 import Http from './code/code'
 
-window.evanayf={
-	http:Http
-}
-
 export default {
 	http: Http
 }
