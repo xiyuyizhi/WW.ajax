@@ -1,6 +1,6 @@
 {
   "name": "ww.ajax",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "ajax ajaxUpload ajaxDownload",
   "main": "index.js",
   "scripts": {
