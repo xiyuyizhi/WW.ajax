@@ -15,7 +15,6 @@ import "./css/upload.less"
 function upload(selector, conf) {
 
     conf = Object.assign({},defaultOption, conf)
-    console.log(conf)
     let ele = null
     $$(selector).on('click',function (e) {
 

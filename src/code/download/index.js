@@ -3,7 +3,7 @@
  */
 
 import Http from "../../code/code"
-import $$ from "../upload/util/query"
+
 
 const config = {
 	url: '',
@@ -32,23 +32,24 @@ export default function (conf) {
 		Http({
 			url: con.url,
 			type: 'get',
-			headers: {
-				responseType: 'arraybuffer',
-				dataType: 'text'
+			responseType: 'arraybuffer',
+			headers:{
+				dataType:'buffer'
 			}
 		}).then(res=> {
 			console.log(res)
 			const namestr = decodeURIComponent(res.headers('content-disposition').split(' ')[1])
 			const blob = new Blob([res.data], {type: res.headers('content-type')})
+			console.log(res.headers('content-type'))
 			console.log(blob)
 			downFile(blob, namestr.split('=')[1])
 		})
 	} else {
 		const tagA = document.createElement('A')
-		tagA.href = con.url
+		document.body.appendChild(tagA)
 		tagA.target = "_blank"
 		tagA.download = "download"
-		document.querySelector('body').appendChild(tagA)
+		tagA.href = con.url
 		tagA.click()
 	}
 

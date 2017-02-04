@@ -29,6 +29,8 @@ function adapterResponse(dataType, xhr) {
 			break
 		case 'jsonP':
 			break
+		case 'buffer':
+			data=xhr.response
 		default:
 	}
 	return data
@@ -58,6 +60,7 @@ function rejectFn(xhr, errorFn, reject) {
  * @param {function} resolve promise resolve
  */
 function resolveFn(data, xhr, successFn, resolve) {
+	console.log(xhr)
 	resolve({
 		data,
 		status: xhr.status,

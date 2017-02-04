@@ -15,14 +15,11 @@ export default {
     json: 'application/json, text/javascript, */*; q=0.01',
     text: 'text/plain, */*; q=0.01',
     html: 'text/html, */*; q=0.01',
+    buffer:'text/plain'
   },
   withCredentials: {
     name: 'withCredentials',
     true: true,
     false: false,
-  },
-  responseType:{
-    name:'responseType',
-    arraybuffer:'arraybuffer'
   }
 }

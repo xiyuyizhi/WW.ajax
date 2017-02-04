@@ -5,6 +5,7 @@
 import Http from './code/code'
 import upload from './code/upload'
 import download from "./code/download"
+import $$ from "./code/upload/util/query"
 
 const WW = {
   http: Http,
@@ -89,7 +90,17 @@ WW.http.upload('.btn1',{
   showType:'loading'
 })
 
-download({
-  url:'http://imgsrc.baidu.com/baike/pic/item/78310a55b319ebc410d913d68726cffc1f1716df.jpg',
-  downType:'file'
-});
+$$('.down_file').on('click',function(){
+  download({
+    url:'http://www.xiyuyizhi.com:9001/2016-11-17/fa1dda002c675e4f41692ce69aacd1fa.jpg',
+    downType:'file'
+  });
+})
+
+
+$$('.down_buffer').on('click',function(){
+  download({
+    url:'/rest/pdf/57e9f2ee0f06cc29256a9ac3?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOjEwMDEsImlhdCI6MTQ4NjE3NzU2OCwiZXhwIjoxNDg2MTgxMTY4fQ.4RY2-Cg8D76tlgnryDFXq04OCcBiXH0qUDnmLYib-9M',
+    downType:'buffer'
+  });
+})
