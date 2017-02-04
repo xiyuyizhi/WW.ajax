@@ -23,10 +23,9 @@ export default function(fileList, config){
 	const loadedArr=Array(count).fill().map(item => 0)
 	let totalSize=0
 	for(const item of fileList){
-		console.log(item)
 		totalSize+=item.size
 		if (!checkSuffix(config.allowSuffix, item.type)) {
-			$$('#loadingUpload').find('.loadingTxt').html(`${item.name}格式不允许`)
+			$$('#loadingUpload').show().find('.loadingTxt').html(`${item.name}格式不允许`)
 			setTimeout( function(){
 				$$('#loadingUpload').hide()
 			},1000)
@@ -46,8 +45,6 @@ export default function(fileList, config){
 				contentType: 'multipart',
 				dataType: 'text'
 			},
-			success: config.success,
-			error: config.error,
 			uploadProcess: function (e) {
 				loadedArr[index]=e.loaded
 				const percent=(canculateLoaded(loadedArr)/totalSize*100).toFixed(1)
@@ -64,4 +61,9 @@ export default function(fileList, config){
 		}
 		promiseArr.push(Http(con))
 	})
+
+	Promise.all(promiseArr).then(function(results){
+		config.complete(results)
+	})
+
 }

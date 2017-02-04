@@ -9,8 +9,5 @@ export default {
     multiple:'multiple',
     showType:'process', // process|loading 上传中时,交互效果是进度条还是loading
     allowSuffix: 'application/x-rar-compressed,image/jpeg,image/png,application/pdf',
-    success: function () {
-    },
-    error: function () {
-    }
+    complete:function(){}
 }

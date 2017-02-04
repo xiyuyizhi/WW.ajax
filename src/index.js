@@ -2,26 +2,20 @@
  * Created by xiyuyizhi on 16-12-20.
  */
 
-import Http from './code/code'
-import upload from './code/upload'
-import download from "./code/download"
-import $$ from "./code/util/query"
 
-const WW = {
-  http: Http,
-}
-WW.http['upload']=upload
-WW.http['download']=download
+
+import evanayf from "./all"
+
 const loading = document.querySelector('.loading')
 
-WW.http.Interceptor({
+evanayf.http.Interceptor({
   request(config) {
     config.headers.token = 'tokennnn'
     //loading.className += ' show'
     return config
   },
   response(data) {
-    if (!WW.http.pendingRequests.length) {
+    if (!evanayf.http.pendingRequests.length) {
       loading.className = 'loading'
     }
     return data
@@ -61,7 +55,7 @@ WW.http.Interceptor({
 // })
 
 
-WW.http.get('api/users/:userId', {
+evanayf.http.get('api/users/:userId', {
   userId: 1,
 }).then((data) => {
   console.log('get success')
@@ -69,7 +63,7 @@ WW.http.get('api/users/:userId', {
 })
 
 
-WW.http.post('api/users',
+evanayf.http.post('api/users',
   {
     username: 'ww',
     age: 22,
@@ -81,27 +75,34 @@ WW.http.post('api/users',
 })
 
 
-WW.http.upload('.btn', {
+evanayf.http.upload('.btn', {
   url:'/api/upload',
-  showType:'process'
+  showType:'process',
+  complete:function(results){
+    console.log('ok')
+    console.log(results)
+  }
 })
 
-WW.http.upload('.btn1',{
+evanayf.http.upload('.btn1',{
   url:'/api/upload',
-  showType:'loading'
+  showType:'loading',
+  complete:function(results){
+    console.log(results)
+  }
 })
 
-$$('.down_file').on('click',function(){
-  WW.http.download({
+document.querySelector('.down_file').onclick=function(){
+  evanayf.http.download({
     url:'http://www.xiyuyizhi.com:9001/2016-11-17/fa1dda002c675e4f41692ce69aacd1fa.jpg',
     downType:'file'
   });
-})
+}
 
 
-$$('.down_buffer').on('click',function(){
-  WW.http.download({
-    url:'/rest/pdf/57e9f2ee0f06cc29256a9ac3?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOjEwMDEsImlhdCI6MTQ4NjE3NzU2OCwiZXhwIjoxNDg2MTgxMTY4fQ.4RY2-Cg8D76tlgnryDFXq04OCcBiXH0qUDnmLYib-9M',
+document.querySelector('.down_buffer').onclick=function(){
+  evanayf.http.download({
+    url:'/rest/pdf/57f3b873a2499c5821437aa2?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOjEwMDEsImlhdCI6MTQ4NjE4MjAwNCwiZXhwIjoxNDg2MTg1NjA0fQ.1L8Bq974YkvRl-9I1iCkqRl-ZVNBE9VXqWnh5vpkgxg',
     downType:'buffer'
   });
-})
+}

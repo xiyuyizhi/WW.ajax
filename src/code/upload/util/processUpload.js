@@ -18,6 +18,13 @@ function doUpload(fileList, config, promiseArr) {
 	const originLen=Number(localStorage.getItem('originLen'))//之前已经上传过的数量
 	fileList.forEach((file, index) => {
 		if (!checkSuffix(config.allowSuffix, file.type)) {
+			promiseArr.push(new Promise( (resolve,reject)=>{
+				resolve({
+					status:0,
+					statusText:'文件类型不允许',
+					data:file
+				})
+			}))
 			return;
 		}
 		const con = {
@@ -28,8 +35,6 @@ function doUpload(fileList, config, promiseArr) {
 				contentType: 'multipart',
 				dataType: 'text'
 			},
-			success: config.success,
-			error: config.error,
 			uploadProcess: function (e) {
 				const $li = $$('.processUl li').eq(originLen+index)
 				const $processDiv = $li.find(".processDiv");
@@ -88,7 +93,7 @@ export default function(fileList, config) {
 
 	localStorage.setItem('originLen',Number(localStorage.getItem('originLen')) + fileList.length)
 
-	Promise.all(promiseArr).then(function () {
+	Promise.all(promiseArr).then(function (results) {
 		if(!Http.pendingRequests.length){
 			//全部完成
 			$uploadProcess.find('.headMsg').html('全部完成')
@@ -96,9 +101,7 @@ export default function(fileList, config) {
 				$uploadProcess.find('.minimize').get(0).click();
 			}, 500);
 		}
-
-	}, function (errors) {
-		console.log(errors)
+		config.complete(results)
 	})
 
 }

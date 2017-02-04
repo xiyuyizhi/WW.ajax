@@ -2,7 +2,7 @@
  * Created by xiyuyizhi on 16-12-20.
  */
 
-import Promise from 'promise'
+//import Promise from 'promise'
 import options from './var/option'
 import createXhr from './createXhr'
 import merge from './util/mergeObject'
@@ -60,7 +60,6 @@ function rejectFn(xhr, errorFn, reject) {
  * @param {function} resolve promise resolve
  */
 function resolveFn(data, xhr, successFn, resolve) {
-	console.log(xhr)
 	resolve({
 		data,
 		status: xhr.status,

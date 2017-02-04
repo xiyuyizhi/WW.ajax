@@ -10,6 +10,15 @@ import loadingUpload from "./util/loadingUpload"
 import $$ from "../util/query"
 import "./css/upload.less"
 
+function createEle(conf) {
+    const ele = document.createElement('input')
+    ele.type = 'file'
+    ele.name = conf.fileName
+    ele.multiple = conf.multiple
+    ele.style = 'display:none';
+    return ele
+}
+
 function upload(selector, conf) {
 
     conf = Object.assign({},defaultOption, conf)
@@ -26,7 +35,7 @@ function upload(selector, conf) {
                 }
                 break;
             case  'loading':
-                if(!document.querySelector('#uploadProcess')){
+                if(!document.querySelector('#loadingUpload')){
                     initLoadingHtml()
                 }
                 break;
@@ -34,14 +43,6 @@ function upload(selector, conf) {
                 throw new Error('need a property showType and the value can be only process or loading')
         }
 
-        function createEle(conf) {
-            const ele = document.createElement('input')
-            ele.type = 'file'
-            ele.name = conf.fileName
-            ele.multiple = conf.multiple
-            ele.style = 'display:none';
-            return ele
-        }
         if (!ele) {
             ele = createEle(conf) //input file
             e.target.appendChild(ele)
