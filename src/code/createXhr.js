@@ -76,7 +76,6 @@ export default function (conf) {
     formData.append('file', conf.data);//multipart/form-data
     xhr.send(formData);
   }else if(conf.responseType=='arraybuffer' || conf.responseType=='blob'){
-    console.log('pppppppppppp')
     xhr.responseType = conf.responseType;
     xhr.send(JSON.stringify(conf.data) || null)
   }else{

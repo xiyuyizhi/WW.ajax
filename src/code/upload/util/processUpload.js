@@ -2,7 +2,7 @@
  * Created by xiyuyizhi on 17-1-18.
  */
 
-import $$ from "../util/query"
+import $$ from "../../util/query"
 import processBar from "../util/processBar"
 import checkSuffix from "../util/checkSuffix"
 import Http from "../../code"

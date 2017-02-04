@@ -2,8 +2,8 @@
  * Created by xiyuyizhi on 17-1-18.
  */
 
-import $$ from "../util/query"
 import checkSuffix from "../util/checkSuffix"
+import $$ from "../../util/query"
 import Http from "../../code"
 
 

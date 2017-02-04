@@ -2,30 +2,27 @@
  * Created by xiyuyizhi on 16-12-26.
  */
 
-import eventHandler from "./code/eventHandler"
-import css from "./code/css"
+import $$ from "../../util/query"
 
 function eventListener(uploadProcess){
-    const $minimize=uploadProcess.querySelector('.minimize');
-    const $maximize=uploadProcess.querySelector('.maximize');
-    const $close=uploadProcess.querySelector('#close');
-    const $processUl=uploadProcess.querySelector('.processUl')
+    const $minimize=uploadProcess.find('.minimize');
+    const $maximize=uploadProcess.find('.maximize');
+    const $processUl=uploadProcess.find('.processUl')
     //最小化
-    eventHandler.on($maximize,'click',function(){
-        css(uploadProcess,'display','block')
-        css(uploadProcess,'height','400px')
-        css($minimize,'display','block')
-        css($maximize,'display','none')
+    $maximize.on('click',function(){
+        uploadProcess.show().css('height','400px')
+        $minimize.show()
+        $maximize.hide()
     })
-    eventHandler.on($minimize,'click',function(){
-        css(uploadProcess,'height','50px')
-        css($minimize,'display','none')
-        css($maximize,'display','block')
+    $minimize.on('click',function(){
+        uploadProcess.css('height','50px')
+        $minimize.hide()
+        $maximize.show()
     })
-    eventHandler.on($close,'click',function(){
+    uploadProcess.find('#close').on('click',function(){
         localStorage.removeItem('originLen')
-        css(uploadProcess,'display','none')
-        $processUl.innerHTML=''
+        uploadProcess.hide()
+        $processUl.html('')
         //count.fileLen=0
     })
 }
@@ -45,10 +42,7 @@ export default function(){
                           </div>`
     const div =document.createElement('div')
     div.innerHTML=processHtml
-
     document.querySelector('body').appendChild(div)
-
-    const uploadProcess=document.querySelector('#uploadProcess')
-    eventListener(uploadProcess)
+    eventListener($$('#uploadProcess'))
 }
 

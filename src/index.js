@@ -5,12 +5,13 @@
 import Http from './code/code'
 import upload from './code/upload'
 import download from "./code/download"
-import $$ from "./code/upload/util/query"
+import $$ from "./code/util/query"
 
 const WW = {
   http: Http,
 }
 WW.http['upload']=upload
+WW.http['download']=download
 const loading = document.querySelector('.loading')
 
 WW.http.Interceptor({
@@ -91,7 +92,7 @@ WW.http.upload('.btn1',{
 })
 
 $$('.down_file').on('click',function(){
-  download({
+  WW.http.download({
     url:'http://www.xiyuyizhi.com:9001/2016-11-17/fa1dda002c675e4f41692ce69aacd1fa.jpg',
     downType:'file'
   });
@@ -99,7 +100,7 @@ $$('.down_file').on('click',function(){
 
 
 $$('.down_buffer').on('click',function(){
-  download({
+  WW.http.download({
     url:'/rest/pdf/57e9f2ee0f06cc29256a9ac3?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1SWQiOjEwMDEsImlhdCI6MTQ4NjE3NzU2OCwiZXhwIjoxNDg2MTgxMTY4fQ.4RY2-Cg8D76tlgnryDFXq04OCcBiXH0qUDnmLYib-9M',
     downType:'buffer'
   });

@@ -3,14 +3,12 @@
  */
 
 import defaultOption from "./var/defaultOption"
-import $$ from "./util/query"
 import initProcessHtml from "./util/initProcessHtml"
 import initLoadingHtml from "./util/initLoadingHtml"
 import processUpload from "./util/processUpload"
 import loadingUpload from "./util/loadingUpload"
-
+import $$ from "../util/query"
 import "./css/upload.less"
-
 
 function upload(selector, conf) {
 

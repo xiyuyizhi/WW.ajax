@@ -2,7 +2,7 @@
  * Created by xiyuyizhi on 16-12-20.
  */
 
-import Http from "../../code/code"
+import Http from "../code"
 
 
 const config = {
