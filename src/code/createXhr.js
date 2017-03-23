@@ -16,7 +16,7 @@ function headerSet(confHeaders, xhr) {
       if(confHeaders[key]!=='multipart'){ //附件上传不需要指定content-type:multipart/form-data
         const k = headers[key].name
         const v = headers[key][confHeaders[key]]
-        xhr.setRequestHeader(k, v)
+        v && xhr.setRequestHeader(k, v)
       }
     } else {
       xhr.setRequestHeader(key, confHeaders[key])
@@ -69,6 +69,7 @@ export default function (conf) {
   /**
    * 设置后台接受的数据类型
    */
+  console.log(conf)
   headerSet(conf.headers, xhr)
   if(conf.headers.contentType=='multipart'){
     //上传文件类型
