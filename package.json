@@ -1,12 +1,11 @@
 {
   "name": "ww.ajax",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "ajax ajaxUpload ajaxDownload",
   "main": "index.js",
   "scripts": {
     "server": "webpack-dev-server --inline --hot --profile  --watch --colors --progress --display-error-details",
     "build": "rm -rf dist/ && NODE_ENV=production  webpack -p --progress  --config ./webpack.config.js",
-    "dev":"rm -rf dist &&  webpack --progress  --config ./webpack.config.js",
     "test": "npm run test",
     "lint": "eslint --fix src/ --ext js"
   },

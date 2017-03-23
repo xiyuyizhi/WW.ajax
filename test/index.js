@@ -4,7 +4,7 @@
 
 
 
-import evanayf from "./all"
+import evanayf from "../src/all"
 
 const loading = document.querySelector('.loading')
 

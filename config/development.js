@@ -8,7 +8,7 @@ var DashboardPlugin = require('webpack-dashboard/plugin')
 
 module.exports={
 	entry: {
-		app:'./src/index.js',
+		app:'./test/index.js',
 	},
 	output: {
 		path: 'dist',
@@ -40,7 +40,7 @@ module.exports={
 		new webpack.BannerPlugin("author：xiyuyizhi \nCopyright xiyuyizhi."),
 		new ExtractTextPlugin("styles.css"),
 		new HtmlWebpackPlugin({
-			template: 'src/index.html',
+			template: 'test/index.html',
 			inject: 'body'
 		})
 	]
