@@ -130,17 +130,14 @@ export default class Transport {
 					// success
 					if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
 						const data = adapterResponse(confCopy.headers.dataType, xhr)
-						interceptor.response && interceptor.response(data)
+						interceptor.response && interceptor.response(data,xhr)
 						resolveFn(data, xhr, confCopy.success, resolve)
 						return
 					}
 
 					if (confCopy.headers.contentType !== 'multipart') {
 						// error
-						interceptor.responseError && interceptor.responseError({
-							status: xhr.status,
-							statusText: xhr.statusText,
-						})
+						interceptor.responseError && interceptor.responseError(xhr)
 						rejectFn(xhr, confCopy.error, reject)
 					} else {
 						interceptor.response && interceptor.response({
